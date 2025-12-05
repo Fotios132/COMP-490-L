@@ -1,0 +1,339 @@
+﻿import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+
+
+export default function SignInScreen({ onBack }) {
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+
+  const handleSubmit = () => {
+    if (isRegistering) {
+      console.log('Register:', { firstName, lastName, email, password });
+    } else {
+      console.log('Login:', { email, password });
+    }
+  };
+
+
+  const handleSwitch = () => {
+    setIsRegistering(!isRegistering);
+  };
+
+
+  let titleText = 'Welcome Back';
+  let subtitleText = 'Login to continue your adventure';
+  let buttonText = 'Login';
+  let switchText = "Don't have an account? Register";
+
+
+  if (isRegistering) {
+    titleText = 'Create Account';
+    subtitleText = 'Join the gamers paradise!';
+    buttonText = 'Register';
+    switchText = 'Already have an account? Login';
+  }
+
+
+  return (
+    <View style={styles.signInContainer}>
+      <Text style={styles.logo}>GameStart</Text>
+      <Text style={styles.title}>{titleText}</Text>
+      <Text style={styles.subtitle}>{subtitleText}</Text>
+
+
+      {isRegistering && (
+        <>
+          <TextInput
+            style={styles.input}
+            placeholder="First Name"
+            placeholderTextColor="#ccc"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder="Last Name"
+            placeholderTextColor="#ccc"
+            value={lastName}
+            onChangeText={setLastName}
+          />
+        </>
+      )}
+
+
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        placeholderTextColor="#ccc"
+        keyboardType="email-address"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Password"
+        placeholderTextColor="#ccc"
+        secureTextEntry
+        value={password}
+        onChangeText={setPassword}
+      />
+
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>{buttonText}</Text>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity onPress={handleSwitch}>
+        <Text style={styles.switchText}>{switchText}</Text>
+      </TouchableOpacity>
+
+
+      <TouchableOpacity onPress={onBack}>
+        <Text style={styles.backText}>← Back to Home</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+
+const styles = StyleSheet.create({
+  signInContainer: {
+    flex: 1,
+    backgroundColor: '#000',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  logo: {
+    color: '#00ffff',
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  title: {
+    color: '#00ffff',
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 5,
+  },
+  subtitle: {
+    color: '#ccc',
+    marginBottom: 20,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  input: {
+    backgroundColor: '#111',
+    color: '#fff',
+    width: '90%',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    marginBottom: 15,
+    borderWidth: 1,
+    borderColor: '#00ffff',
+  },
+  button: {
+    backgroundColor: '#00ffff',
+    borderRadius: 8,
+    width: '90%',
+    paddingVertical: 12,
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  buttonText: {
+    color: '#000',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  switchText: {
+    color: '#00ffff',
+    marginTop: 15,
+    fontSize: 14,
+  },
+  backText: {
+    color: '#ccc',
+    marginTop: 10,
+    fontSize: 14,
+  },
+});
+
+
+—----------------------------------------------------------------------------------------------------------------------------
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
+import SignInScreen from './SignInScreen';
+
+
+export default function App() {
+  const [showSignIn, setShowSignIn] = useState(false);
+
+
+  const images = new Map([
+    ['videoGames', 'https://cdn.cloudflare.steamstatic.com/steam/apps/1091500/header.jpg'],
+    ['consoles', 'https://www.billboard.com/wp-content/uploads/2023/07/Marvel-s-Spider-Man-2-Limited-Edition-cr-Sony-billboard-1548.png?w=942&h=628&crop=1'],
+    ['accessories', 'https://assets.xboxservices.com/assets/59/10/5910d098-6cb4-459e-a3bf-10972df27ac7.jpg?n=Xbox-Wireless-Controller_Image-Hero-1084_Blue_1920x831_01.jpg'],
+  ]);
+
+
+  if (showSignIn) {
+    return <SignInScreen onBack={() => setShowSignIn(false)} />;
+  }
+
+
+  return (
+    <View style={styles.container}>
+      {/* Fixed Header */}
+      <View style={styles.header}>
+        <View style={styles.navbar}>
+          <Text style={styles.logo}>GameStart</Text>
+
+
+          <TouchableOpacity style={styles.signInButton} onPress={() => setShowSignIn(true)}>
+            <Text style={styles.signInText}>Sign In</Text>
+          </TouchableOpacity>
+
+
+          <TouchableOpacity style={styles.cartButton}>
+            <Text style={styles.cartText}>Cart (0)</Text>
+          </TouchableOpacity>
+        </View>
+
+
+        <TextInput
+          style={styles.searchBar}
+          placeholder="Search games, consoles, accessories..."
+          placeholderTextColor="#ccc"
+        />
+      </View>
+
+
+      {/* Scrollable Content */}
+      <ScrollView contentContainerStyle={styles.scrollArea}>
+        <Text style={styles.title}>Gear up. Game on.</Text>
+        <Text style={styles.subtitle}>Gamers Paradise</Text>
+
+
+        <View style={styles.cardContainer}>
+          {[
+            { title: 'Video Games', key: 'videoGames' },
+            { title: 'Consoles', key: 'consoles' },
+            { title: 'Accessories', key: 'accessories' },
+          ].map((item) => (
+            <TouchableOpacity style={styles.card} key={item.key}>
+              <Image source={{ uri: images.get(item.key) }} style={styles.image} />
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardText}>Tap to explore</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </ScrollView>
+    </View>
+  );
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  header: {
+    backgroundColor: '#000',
+    paddingTop: 40,
+    paddingBottom: 10,
+    alignItems: 'center',
+  },
+  navbar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#111',
+    width: '95%',
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderRadius: 12,
+  },
+  logo: {
+    color: '#00ffff',
+    fontSize: 28,
+    fontWeight: 'bold',
+  },
+  signInButton: {
+    marginHorizontal: 5,
+  },
+  signInText: {
+    color: '#00ffff',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  cartButton: {
+    backgroundColor: '#00ffff',
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    justifyContent: 'center',
+  },
+  cartText: {
+    color: '#000',
+    fontWeight: 'bold',
+  },
+  searchBar: {
+    width: '95%',
+    backgroundColor: '#222',
+    color: '#fff',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    height: 40,
+    marginTop: 10,
+  },
+  scrollArea: {
+    alignItems: 'center',
+    paddingBottom: 40,
+  },
+  title: {
+    color: '#00ffff',
+    fontSize: 32,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 5,
+  },
+  subtitle: {
+    color: '#ccc',
+    marginBottom: 20,
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  cardContainer: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  card: {
+    backgroundColor: '#111',
+    borderRadius: 12,
+    marginBottom: 20,
+    overflow: 'hidden',
+    width: '90%',
+    alignItems: 'center',
+  },
+  image: {
+    width: '100%',
+    height: 150,
+  },
+  cardTitle: {
+    color: '#00ffff',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 8,
+  },
+  cardText: {
+    color: '#aaa',
+    marginBottom: 10,
+  },
+});
